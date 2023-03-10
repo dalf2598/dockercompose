@@ -1,0 +1,49 @@
+_format_version: "2.1"
+
+services:
+  - name: service-1
+    url: http://host.docker.internal:8202/api/v1/branches
+    routes:
+      - name: branches
+        paths:
+          - /branches
+
+  - name: service-2
+    url: http://host.docker.internal:8203/api/v1/interestrates
+    routes:
+      - name: interestrates
+        paths:
+          - /interestrates
+  
+  - name: service-3
+    url: http://host.docker.internal:8203/api/v1/productsaccounts
+    routes:
+      - name: productsaccounts
+        paths:
+          - /productsaccounts
+  
+plugins:
+- name: key-auth
+  config: 
+    key_names:
+    - apikey
+
+- name: rate-limiting
+  config: 
+    minute: 5
+    policy: local
+#Optional
+- name: prometheus
+      
+consumers:
+- username: alpha
+  custom_id: ALPHA_ID
+
+keyauth_credentials:
+- consumer: alpha
+  ttl: 5000
+  tags:
+    - example_tag
+  key: alphasecret
+
+
